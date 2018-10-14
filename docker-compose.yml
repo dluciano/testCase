@@ -1,0 +1,13 @@
+version: '3.4'
+
+services:
+  clay.identityserver:
+    image: ${DOCKER_REGISTRY}clayidentityserver
+    build:
+      context: .
+      dockerfile: src/IdentityServer/Dockerfile
+  db:
+    image: "microsoft/mssql-server-linux"
+    environment:
+        SA_PASSWORD: "H3ll0World."
+        ACCEPT_EULA: "Y"

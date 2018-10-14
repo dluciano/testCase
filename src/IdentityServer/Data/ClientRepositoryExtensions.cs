@@ -8,69 +8,38 @@ namespace IdentityServer
 {
     public static class ClientRepositoryExtensions
     {
-        public static IEnumerable<Client> InitialEntities<TIn>(this IRepository<TIn> repo)
-            where TIn : class
-        {
-            return new List<Client>
+        public const string DoorLocksApiName = "clayLockApi";
+        public static IEnumerable<Client> InitialEntities(this IRepository<EF.Client> repo) =>
+            new List<Client>
             {
-                new Client
-                {
-                    ClientId = "client",
-                    AllowedGrantTypes = GrantTypes.ClientCredentials,
-
-                    ClientSecrets =
-                    {
-                        new Secret("secret".Sha256())
-                    },
-                    AllowedScopes = {"api1"}
-                },
-
-                // resource owner password grant client
-                new Client
-                {
-                    ClientId = "ro.client",
-                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
-
-                    ClientSecrets =
-                    {
-                        new Secret("secret".Sha256())
-                    },
-                    AllowedScopes = {"api1"}
-                },
-
                 // OpenID Connect hybrid flow and client credentials client (MVC)
                 new Client
                 {
-                    ClientId = "mvc",
-                    ClientName = "MVC Client",
-                    AllowedGrantTypes = GrantTypes.HybridAndClientCredentials,
-
-                    RequireConsent = true,
-
-                    ClientSecrets =
-                    {
-                        new Secret("secret".Sha256())
-                    },
-
-                    RedirectUris = {"http://localhost:5001/signin-oidc"},
-                    PostLogoutRedirectUris = {"http://localhost:5001/signout-callback-oidc"},
+                    ClientId = "clay",
+                    ClientName = "Clay OAuth",
+                    AllowedGrantTypes = GrantTypes.Implicit,
+                    AllowAccessTokensViaBrowser = true,
+                    AllowOfflineAccess = true,
+                    AllowRememberConsent = true,
+                    RedirectUris =           { "http://localhost:3000/index.html" },
+                    PostLogoutRedirectUris = { "http://localhost:3000/index.html" },
+                    AllowedCorsOrigins =     { "http://localhost:3000" },
 
                     AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
-                        "api1"
-                    },
-                    AllowOfflineAccess = true
+                        IdentityServerConstants.StandardScopes.Email,
+                        DoorLocksApiName
+                    }
                 }
             };
-        }
 
         public static IEnumerable<ApiResource> InitialEntities(this IRepository<EF.ApiResource> repo)
         {
             return new List<ApiResource>
             {
-                new ApiResource("api1", "My API")
+                new ApiResource(DoorLocksApiName, "Clay Door Locks Api")
             };
         }
 
@@ -79,7 +48,8 @@ namespace IdentityServer
             return new List<IdentityResource>
             {
                 new IdentityResources.OpenId(),
-                new IdentityResources.Profile()
+                new IdentityResources.Profile(),
+                new IdentityResources.Email()
             };
         }
     }

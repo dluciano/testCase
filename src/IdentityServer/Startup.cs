@@ -3,6 +3,7 @@ using System.Reflection;
 using Clay.DAL;
 using Clay.Entities;
 using IdentityServer4;
+using IdentityServer4.AccessTokenValidation;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Entities;
 using Microsoft.AspNetCore.Builder;
@@ -21,32 +22,42 @@ namespace IdentityServer
         {
             Configuration = configuration;
             Environment = environment;
+            _connectionString = Configuration.GetConnectionString("DefaultConnection");
+            _migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
         }
 
         private IConfiguration Configuration { get; }
         public IHostingEnvironment Environment { get; }
 
+        private readonly string _connectionString;
+        private readonly string _migrationsAssembly;
+
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            var connectionString = Configuration.GetConnectionString("DefaultConnection");
-            var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
-            ConfigureInjerctors(services, connectionString, migrationsAssembly);
+            ConfigureInjerctors(services);
 
-            ConfigureIdentity(services, connectionString, migrationsAssembly);
+            ConfigureIdentity(services);
 
-            services.AddMvc()
-                .AddRazorPagesOptions(options => { options.AllowAreas = true; });
+            services
+                .AddMvc()
+                .SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_1);
 
             services.AddSingleton<IEmailSender, EmailSenderFake>();
         }
 
-        private static void ConfigureInjerctors(IServiceCollection services, string connectionString,
-            string migrationsAssembly)
+        private void ConfigDb(DbContextOptionsBuilder options)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly)));
+            if (Environment.IsDevelopment())
+                options.UseSqlServer(_connectionString, sql => sql.MigrationsAssembly(_migrationsAssembly));
+            else if (Environment.EnvironmentName == "Docker")
+                options.UseSqlite(_connectionString, sql => sql.MigrationsAssembly(_migrationsAssembly));
+        }
+
+        private void ConfigureInjerctors(IServiceCollection services)
+        {
+            services.AddDbContext<ApplicationDbContext>(ConfigDb);
 
             services.AddTransient<ISeed, Seed>();
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
@@ -68,9 +79,10 @@ namespace IdentityServer
             services.AddTransient<IUnitOfWork, UnitOfWork>();
         }
 
-        private void ConfigureIdentity(IServiceCollection services, string connectionString, string migrationsAssembly)
+        private void ConfigureIdentity(IServiceCollection services)
         {
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services
+                .AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -84,20 +96,16 @@ namespace IdentityServer
                 // this adds the config data from DB (clients, resources)
                 .AddConfigurationStore(options =>
                 {
-                    options.ConfigureDbContext = b =>
-                        b.UseSqlServer(connectionString,
-                            sql => sql.MigrationsAssembly(migrationsAssembly));
+                    options.ConfigureDbContext = b => ConfigDb(b);
                 })
                 // this adds the operational data from DB (codes, tokens, consents)
                 .AddOperationalStore(options =>
                 {
-                    options.ConfigureDbContext = b =>
-                        b.UseSqlServer(connectionString,
-                            sql => sql.MigrationsAssembly(migrationsAssembly));
+                    options.ConfigureDbContext = b => ConfigDb(b);
 
                     // this enables automatic token cleanup. this is optional.
                     options.EnableTokenCleanup = true;
-                    options.DefaultSchema = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+                    //options.DefaultSchema = IdentityServerConstants.ExternalCookieAuthenticationScheme;
                 });
 
             if (Environment.IsDevelopment())
@@ -105,7 +113,24 @@ namespace IdentityServer
             else
                 throw new Exception("need to configure key material");
 
-            services.AddAuthentication();
+            services.AddAuthentication("Bearer")
+                .AddIdentityServerAuthentication(options =>
+                    {
+                        options.Authority = "https://localhost:56232";
+                        options.RequireHttpsMetadata = false;
+                        options.ApiName = ClientRepositoryExtensions.DoorLocksApiName;
+                    });
+            services.AddCors(options =>
+                {
+                    // this defines a CORS policy called "default"
+                    options.AddPolicy("default", policy =>
+                    {
+                        policy.WithOrigins("http://localhost:3000")
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    });
+                });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -123,6 +148,7 @@ namespace IdentityServer
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseCors("default");
             app.UseIdentityServer();
             app.UseMvcWithDefaultRoute();
         }

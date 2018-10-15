@@ -116,7 +116,7 @@ namespace IdentityServer
             services.AddAuthentication("Bearer")
                 .AddIdentityServerAuthentication(options =>
                     {
-                        options.Authority = "https://localhost:56232";
+                        options.Authority = "https://localhost:45268";
                         options.RequireHttpsMetadata = false;
                         options.ApiName = ClientRepositoryExtensions.DoorLocksApiName;
                     });

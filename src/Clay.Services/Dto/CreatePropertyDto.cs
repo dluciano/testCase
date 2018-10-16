@@ -2,7 +2,7 @@
 
 namespace Clay.WebApi
 {
-    public class CreatePropertyViewModel
+    public class CreatePropertyDto
     {
         [Required]
         public string Name { get; set; }

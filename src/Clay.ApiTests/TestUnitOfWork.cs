@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Clay.DAL;
 
 namespace Clay.WebApi.UnitTests
@@ -8,6 +9,9 @@ namespace Clay.WebApi.UnitTests
         public TestUnitOfWork()
         {
         }
+
+        public List<Property> Properties { get; } = new List<Property>();
+        public List<Lock> Locks { get; } = new List<Lock>();
 
         public void SaveChanges()
         {

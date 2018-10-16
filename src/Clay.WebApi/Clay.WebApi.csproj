@@ -30,6 +30,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Clay.DAL\Clay.DAL.csproj" />
     <ProjectReference Include="..\Clay.Entities\Clay.Entities.csproj" />
+    <ProjectReference Include="..\Clay.Services\Clay.Services.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,105 +1,90 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.ObjectModel;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Clay.WebApi
 {
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "11.20.1.0 (NJsonSchema v9.11.0.0 (Newtonsoft.Json v9.0.0.0))")]
     [Route("api/[controller]")]
+    [ApiController]
     public partial class PropertyController : ControllerBase
     {
-        private IPropertyController _implementation;
+        private IPropertyServices _implementation;
 
-        public PropertyController(IPropertyController implementation)
+        public PropertyController(IPropertyServices implementation)
         {
             _implementation = implementation;
         }
 
         /// <summary>Get all properties that belongs to an authenticated user</summary>
         /// <returns>Successfull</returns>
-        [HttpGet, Route("property/me")]
-        public System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Property>> GetUserProperties(System.Threading.CancellationToken cancellationToken)
-        {
-            return _implementation.GetUserPropertiesAsync(cancellationToken);
-        }
+        [HttpGet, Route("me")]
+        public Task<ObservableCollection<Property>> GetUserProperties(CancellationToken cancellationToken) =>
+            _implementation.GetUserPropertiesAsync(cancellationToken);
 
         /// <summary>Create a property associated to the current an authenticated user</summary>
         /// <returns>Property registererd successfully</returns>
-        [HttpPost, Route("property/me")]
-        public System.Threading.Tasks.Task CreateProperty([FromBody] object body, System.Threading.CancellationToken cancellationToken)
-        {
-            return _implementation.CreatePropertyAsync(body, cancellationToken);
-        }
+        [HttpPost, Route("me")]
+        public Task CreateProperty([FromBody] object body, CancellationToken cancellationToken) =>
+            _implementation.CreatePropertyAsync(body, cancellationToken);
 
         /// <summary>Get a specific property by its ID</summary>
         /// <param name="propertyId">ID of property to return</param>
         /// <returns>Successfull</returns>
-        [HttpGet, Route("property/{propertyId}")]
-        public System.Threading.Tasks.Task<Property> GetPropertyById(long propertyId, System.Threading.CancellationToken cancellationToken)
-        {
-            return _implementation.GetPropertyByIdAsync(propertyId, cancellationToken);
-        }
+        [HttpGet, Route("{propertyId}")]
+        public Task<Property> GetPropertyById(long propertyId, CancellationToken cancellationToken) =>
+            _implementation.GetPropertyByIdAsync(propertyId, cancellationToken);
 
         /// <summary>Get all the locks of a property</summary>
         /// <param name="propertyId">ID of property to return</param>
         /// <returns>Ok</returns>
-        [HttpGet, Route("property/{propertyId}/lock")]
-        public System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Lock>> GetLocksOfPropertyId(long propertyId, System.Threading.CancellationToken cancellationToken)
-        {
-            return _implementation.GetLocksOfPropertyIdAsync(propertyId, cancellationToken);
-        }
+        [HttpGet, Route("{propertyId}/lock")]
+        public Task<ObservableCollection<Lock>> GetLocksOfPropertyId(long propertyId, CancellationToken cancellationToken) =>
+            _implementation.GetLocksOfPropertyIdAsync(propertyId, cancellationToken);
 
         /// <summary>Add a lock or group of locks to a property</summary>
         /// <param name="propertyId">ID of the property</param>
         /// <returns>Locks registererd successfully</returns>
-        [HttpPost, Route("property/{propertyId}/lock")]
-        public System.Threading.Tasks.Task AddLockToProperty(long propertyId, [FromBody] object body, System.Threading.CancellationToken cancellationToken)
-        {
-            return _implementation.AddLockToPropertyAsync(propertyId, body, cancellationToken);
-        }
+        [HttpPost, Route("{propertyId}/lock")]
+        public Task AddLockToProperty(long propertyId, [FromBody] object body, CancellationToken cancellationToken) =>
+            _implementation.AddLockToPropertyAsync(propertyId, body, cancellationToken);
 
         /// <summary>Get all the cards of a property</summary>
         /// <param name="propertyId">ID of property to return</param>
         /// <returns>Ok</returns>
-        [HttpGet, Route("property/{propertyId}/card")]
-        public System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Card>> GetCardsOfPropertyAll(long propertyId, System.Threading.CancellationToken cancellationToken)
-        {
-            return _implementation.GetCardsOfPropertyAllAsync(propertyId, cancellationToken);
-        }
+        [HttpGet, Route("{propertyId}/card")]
+        public Task<ObservableCollection<Card>> GetCardsOfPropertyAll(long propertyId, CancellationToken cancellationToken) =>
+            _implementation.GetCardsOfPropertyAllAsync(propertyId, cancellationToken);
 
         /// <summary>Add a card or group of cards to a property</summary>
         /// <param name="propertyId">ID of the property</param>
         /// <returns>Card registererd successfully</returns>
-        [HttpPost, Route("property/{propertyId}/card")]
-        public System.Threading.Tasks.Task AddCardToProperty(long propertyId, [FromBody] object body, System.Threading.CancellationToken cancellationToken)
-        {
-            return _implementation.AddCardToPropertyAsync(propertyId, body, cancellationToken);
-        }
+        [HttpPost, Route("{propertyId}/card")]
+        public Task AddCardToProperty(long propertyId, [FromBody] object body, CancellationToken cancellationToken) =>
+            _implementation.AddCardToPropertyAsync(propertyId, body, cancellationToken);
 
         /// <summary>Get all the card groups belonging to a property</summary>
         /// <param name="propertyId">ID of property</param>
         /// <returns>Ok</returns>
-        [HttpGet, Route("property/{propertyId}/cardgroup")]
-        public System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<CardGroup>> GetCardsGroupsOfProperty(long propertyId, System.Threading.CancellationToken cancellationToken)
-        {
-            return _implementation.GetCardsGroupsOfPropertyAsync(propertyId, cancellationToken);
-        }
+        [HttpGet, Route("{propertyId}/cardgroup")]
+        public Task<ObservableCollection<CardGroup>> GetCardsGroupsOfProperty(long propertyId, CancellationToken cancellationToken) =>
+            _implementation.GetCardsGroupsOfPropertyAsync(propertyId, cancellationToken);
 
         /// <summary>Add a card group to a property</summary>
         /// <param name="propertyId">ID of the property</param>
         /// <returns>Card group registererd successfully</returns>
-        [HttpPost, Route("property/{propertyId}/cardgroup")]
-        public System.Threading.Tasks.Task AddCardGroupToProperty(long propertyId, [FromBody] object body, System.Threading.CancellationToken cancellationToken)
-        {
-            return _implementation.AddCardGroupToPropertyAsync(propertyId, body, cancellationToken);
-        }
+        [HttpPost, Route("{propertyId}/cardgroup")]
+        public Task AddCardGroupToProperty(long propertyId, [FromBody] object body, CancellationToken cancellationToken) =>
+            _implementation.AddCardGroupToPropertyAsync(propertyId, body, cancellationToken);
 
         /// <summary>Get all the events of a property</summary>
         /// <param name="propertyId">ID of property</param>
         /// <returns>Ok</returns>
-        [HttpGet, Route("property/{propertyId}/events")]
-        public System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<LockEvent>> GetCardsOfProperty(long propertyId, System.Threading.CancellationToken cancellationToken)
-        {
-            return _implementation.GetCardsOfPropertyAsync(propertyId, cancellationToken);
-        }
+        [HttpGet, Route("{propertyId}/events")]
+        public Task<ObservableCollection<LockEvent>> GetCardsOfProperty(long propertyId, CancellationToken cancellationToken) =>
+            _implementation.GetCardsOfPropertyAsync(propertyId, cancellationToken);
 
     }
 }

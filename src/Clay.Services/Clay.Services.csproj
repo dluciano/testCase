@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Clay.DAL\Clay.DAL.csproj" />
+    <ProjectReference Include="..\Clay.Entities\Clay.Entities.csproj" />
+  </ItemGroup>
+
+</Project>

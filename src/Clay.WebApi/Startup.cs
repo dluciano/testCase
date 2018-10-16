@@ -1,4 +1,5 @@
 ﻿using Clay.DAL;
+using Clay.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -6,7 +7,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NJsonSchema;
+using NSwag;
 using NSwag.AspNetCore;
+using NSwag.SwaggerGeneration.Processors;
+using NSwag.SwaggerGeneration.Processors.Security;
+using System.Collections.Generic;
 
 namespace Clay.WebApi
 {
@@ -28,6 +33,8 @@ namespace Clay.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<WebApiDbContext>(ConfigDb);
+            services.AddTransient<IPropertyServices, PropertyServices>();
+            services.AddTransient<ILockServices, LockServices>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddAuthentication("Bearer")
@@ -48,9 +55,10 @@ namespace Clay.WebApi
                             .AllowAnyMethod();
                     });
                 });
+
             if (_env.IsDevelopment())
             {
-                services.AddSwagger();
+
             }
         }
 
@@ -60,16 +68,52 @@ namespace Clay.WebApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwaggerUi3WithApiExplorer(settings =>
-                {
-                    settings.GeneratorSettings.DefaultPropertyNameHandling =
-                        PropertyNameHandling.CamelCase;
-                });
+
             }
             else
             {
                 app.UseHsts();
             }
+
+            app.UseSwaggerUi3WithApiExplorer(config =>
+                {
+                    config.GeneratorSettings.OperationProcessors.TryGet<ApiVersionProcessor>()
+                        .IncludedVersions = new[] { "1.0" };
+                    config.SwaggerRoute = "/v1/swagger.json";
+
+                    config.GeneratorSettings.Title = "Clay Api";
+                    config.GeneratorSettings.Description = "Documentation of the lock API";
+
+                    config.GeneratorSettings.DefaultPropertyNameHandling =
+                        PropertyNameHandling.CamelCase;
+
+                    config.GeneratorSettings.DocumentProcessors.Add(
+                        new SecurityDefinitionAppender("oauth2", new SwaggerSecurityScheme
+                        {
+                            Type = SwaggerSecuritySchemeType.OAuth2,
+                            Description = "Foo",
+                            Flow = SwaggerOAuth2Flow.Implicit,
+                            AuthorizationUrl = "https://localhost:45268/connect/authorize",
+                            TokenUrl = "https://localhost:45268/connect/token",
+                            Scopes = new Dictionary<string, string>
+                            {
+                                { "openid", "Read access to protected resources" },
+                                { "profile", "Read access to protected resources" },
+                                { "email", "Write access to protected resources" },
+                                { "clayLockApi", "Write access to protected resources" }
+                            }
+                        })
+                    );
+
+                    config.GeneratorSettings.DocumentProcessors.Add(
+                        new SecurityDefinitionAppender("apikey", new SwaggerSecurityScheme
+                        {
+                            Type = SwaggerSecuritySchemeType.ApiKey,
+                            Name = "api_key",
+                            In = SwaggerSecurityApiKeyLocation.Header,
+                        })
+                    );
+                });
 
             app.UseHttpsRedirection();
             app.UseCors("default");

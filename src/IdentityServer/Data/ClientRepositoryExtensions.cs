@@ -21,9 +21,29 @@ namespace IdentityServer
                     AllowAccessTokensViaBrowser = true,
                     AllowOfflineAccess = true,
                     AllowRememberConsent = true,
-                    RedirectUris =           { "http://localhost:3000/index.html" },
-                    PostLogoutRedirectUris = { "http://localhost:3000/index.html" },
-                    AllowedCorsOrigins =     { "http://localhost:3000" },
+                    RedirectUris =           { "http://localhost:3000/index.html", "https://localhost:5001/swagger/oauth2-redirect.html"},
+                    PostLogoutRedirectUris = { "http://localhost:3000/index.html", "https://localhost:5001/swagger/oauth2-redirect.html"},
+                    AllowedCorsOrigins =     { "http://localhost:3000", "https://localhost:5001"},
+
+                    AllowedScopes =
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        IdentityServerConstants.StandardScopes.Email,
+                        DoorLocksApiName
+                    }
+                },
+                new Client
+                {
+                    ClientId = "claySwagger",
+                    ClientName = "Clay Swagger OAuth",
+                    AllowedGrantTypes = GrantTypes.Implicit,
+                    AllowAccessTokensViaBrowser = true,
+                    AllowOfflineAccess = true,
+                    AllowRememberConsent = true,
+                    RedirectUris =           { "https://localhost:5001/swagger/oauth2-redirect.html"},
+                    PostLogoutRedirectUris = { "https://localhost:5001/swagger/oauth2-redirect.html"},
+                    AllowedCorsOrigins =     { "https://localhost:5001"},
 
                     AllowedScopes =
                     {

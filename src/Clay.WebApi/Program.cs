@@ -25,7 +25,7 @@ namespace Clay.WebApi
             {
                 using (var scope = host.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
                 {
-                    //scope.ServiceProvider.GetRequiredService<ISeed>().EnsureSeedDataAsync();
+                    scope.ServiceProvider.GetRequiredService<ISeed>().EnsureSeedDataAsync();
                 }
 
                 return;

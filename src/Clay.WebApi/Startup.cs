@@ -2,6 +2,7 @@
 using Clay.DAL;
 using Clay.Services;
 using Clay.WebApi.Data;
+using IdentityServer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -37,7 +38,7 @@ namespace Clay.WebApi
             services.AddDbContext<DbContext, WebApiDbContext>(ConfigDb);
             services.AddTransient<IPropertyServices, PropertyServices>();
             services.AddTransient<ILockServices, LockServices>();
-            //services.AddTransient<ISeed, Seed>();
+            services.AddTransient<ISeed, Clay.WebApi.Seed>();
             services.AddTransient<ISecurityService, SecurityService>();
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
             services.AddTransient<IUnitOfWork, UnitOfWork>();

@@ -75,20 +75,6 @@ namespace Clay.WebApi
             return RenderResult(result);
         }
 
-        private IActionResult RenderResult(ResultDto result)
-        {
-            switch (result.ResultType)
-            {
-                case ResultType.Sucessful:
-                    return Ok(result.Value);
-                case ResultType.EntityNotFounded:
-                    return NotFound(result.Errors);
-                case ResultType.InvalidRequest:
-                    return BadRequest(ModelState);
-            }
-            throw new Exception(result.StatusMessage);
-        }
-
         /// <summary>Get all the cards of a property</summary>
         /// <param name="propertyId">ID of property to return</param>
         /// <returns>Ok</returns>
@@ -121,8 +107,18 @@ namespace Clay.WebApi
         /// <param name="propertyId">ID of property</param>
         /// <returns>Ok</returns>
         [HttpGet, Route("{propertyId}/events")]
-        public async Task<ObservableCollection<LockEvent>> GetCardsOfProperty(int propertyId, CancellationToken cancellationToken) =>
-            await _implementation.GetCardsOfPropertyAsync(propertyId, cancellationToken);
+        public async Task<IActionResult> GetPropertyLockEVents(int? propertyId, CancellationToken cancellationToken)
+        {
+            //Validate the request
+            if (propertyId == null)
+            {
+                ModelState.AddModelError("propertyId", "The propertyId cannot be null");
+                return BadRequest(ModelState);
+            }
+            var result = await _implementation
+                .GetEventsOfProperty(propertyId.Value, cancellationToken);
+            return RenderResult(result);
+        }
 
     }
 }

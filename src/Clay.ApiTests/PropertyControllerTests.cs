@@ -51,9 +51,7 @@ namespace Clay.WebApi.UnitTests
             serviceProvider.RegisterService<IRepository<Property>>(mockPropertyRepo);
             var securityService = new SecurityService(serviceProvider);
             var propertySrv = new PropertyServices(mockPropertyRepo,
-                mockLockRepo,
-                cgroups,
-                uof);
+                mockLockRepo, cgroups, lockEvent, uof);
             var lockService = new LockServices(cards, mockLockRepo,
                 cgroupLog, lockCards, lockEvent, securityService, uof);
             return new PropertyController(propertySrv, lockService);

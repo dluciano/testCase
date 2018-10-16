@@ -52,6 +52,6 @@ namespace Clay.WebApi
         /// <summary>Get all the events of a property</summary>
         /// <param name="propertyId">ID of property</param>
         /// <returns>Ok</returns>
-        Task<ObservableCollection<LockEvent>> GetCardsOfPropertyAsync(int propertyId, CancellationToken cancellationToken);
+        Task<ResultDto> GetEventsOfProperty(int propertyId, CancellationToken cancellationToken);
     }
 }

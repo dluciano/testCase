@@ -15,18 +15,24 @@ namespace Clay.Services
         private readonly IRepository<Property> _properties;
         private readonly IRepository<Lock> _locks;
         private readonly IRepository<CardGroup> _cardGroups;
+        public readonly IRepository<LockEvent> _lockEvents;
+
         private readonly IUnitOfWork _uow;
 
         public PropertyServices(IRepository<Property> properties,
             IRepository<Lock> locks,
             IRepository<CardGroup> cardGroups,
+            IRepository<LockEvent> lockEvents,
             IUnitOfWork uow)
         {
             _properties = properties;
             _locks = locks;
             _cardGroups = cardGroups;
+            _lockEvents = lockEvents;
             _uow = uow;
         }
+
+
         public Task AddCardGroupToPropertyAsync(int propertyId, object body, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
@@ -74,9 +80,13 @@ namespace Clay.Services
             throw new NotImplementedException();
         }
 
-        public Task<ObservableCollection<LockEvent>> GetCardsOfPropertyAsync(int propertyId, CancellationToken cancellationToken)
+        public async Task<ResultDto> GetEventsOfProperty(int propertyId, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var property = _properties.FirstOrDefault(p => p.Id == propertyId);
+            if (property == null)
+                return ResultDto.NotFound("Property not found");
+            var events = _lockEvents.Where(l => l.Lock.Property.Id == propertyId);
+            return ResultDto.Ok(new ObservableCollection<LockEvent>(events));
         }
 
         public Task<ObservableCollection<Lock>> GetLocksOfPropertyIdAsync(int propertyId, CancellationToken cancellationToken)

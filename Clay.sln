@@ -11,7 +11,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clay.Entities", "src\Clay.E
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{27197328-4D77-41FE-B276-240467618614}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clay.WebApi", "src\Clay.WebApi\Clay.WebApi.csproj", "{B0B342D1-CC35-470B-8EAB-68E3E9CC60E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clay.WebApi", "src\Clay.WebApi\Clay.WebApi.csproj", "{B0B342D1-CC35-470B-8EAB-68E3E9CC60E3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebApi", "WebApi", "{F2A47CC7-A977-416E-848C-9774418E01E7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OAuthServer", "OAuthServer", "{3B7D962F-9396-4054-9D43-9004E08A75D7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{8851FA3F-1D7A-4367-BD6B-298B3FB9CA5E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,6 +48,12 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{74E0D66F-97E1-4822-BEEF-22EA37C78125} = {3B7D962F-9396-4054-9D43-9004E08A75D7}
+		{D12F299C-6BEC-4263-A81A-785172998391} = {8851FA3F-1D7A-4367-BD6B-298B3FB9CA5E}
+		{9760FD6C-39B8-4DFC-BEA5-D550F7D8230B} = {8851FA3F-1D7A-4367-BD6B-298B3FB9CA5E}
+		{B0B342D1-CC35-470B-8EAB-68E3E9CC60E3} = {F2A47CC7-A977-416E-848C-9774418E01E7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9698EE6B-5819-432D-B51C-C52A4EC177A2}

@@ -1,5 +1,7 @@
-﻿using Clay.DAL;
+﻿using Clay.Core.Implementations;
+using Clay.DAL;
 using Clay.Services;
+using Clay.WebApi.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -32,9 +34,13 @@ namespace Clay.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<WebApiDbContext>(ConfigDb);
+            services.AddDbContext<DbContext, WebApiDbContext>(ConfigDb);
             services.AddTransient<IPropertyServices, PropertyServices>();
             services.AddTransient<ILockServices, LockServices>();
+            //services.AddTransient<ISeed, Seed>();
+            services.AddTransient<ISecurityService, SecurityService>();
+            services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddAuthentication("Bearer")

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using Clay.Core.Implementations;
 using Clay.DAL;
 using Clay.Entities;
 using IdentityServer4;
@@ -57,23 +58,29 @@ namespace IdentityServer
 
         private void ConfigureInjerctors(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(ConfigDb);
+            services.AddDbContext<DbContext, ApplicationDbContext>(ConfigDb);
 
             services.AddTransient<ISeed, Seed>();
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+            services.AddTransient<ISecurityService, SecurityService>();
 
             services.AddTransient<IRepository<Client>, Repository<Client>>(serviceProvider =>
             {
-                return new Repository<Client>(serviceProvider.GetRequiredService<ConfigurationDbContext>());
+                return new Repository<Client>(
+                    serviceProvider.GetRequiredService<ConfigurationDbContext>(),
+                    serviceProvider.GetRequiredService<ISecurityService>());
             });
             services.AddTransient<IRepository<ApiResource>, Repository<ApiResource>>(serviceProvider =>
             {
-                return new Repository<ApiResource>(serviceProvider.GetRequiredService<ConfigurationDbContext>());
+                return new Repository<ApiResource>(
+                    serviceProvider.GetRequiredService<ConfigurationDbContext>(),
+                    serviceProvider.GetRequiredService<ISecurityService>());
             });
             services.AddTransient<IRepository<IdentityResource>, Repository<IdentityResource>>(serviceProvider =>
             {
                 return new Repository<IdentityResource>(
-                    serviceProvider.GetRequiredService<ConfigurationDbContext>());
+                    serviceProvider.GetRequiredService<ConfigurationDbContext>(),
+                    serviceProvider.GetRequiredService<ISecurityService>());
             });
 
             services.AddTransient<IUnitOfWork, UnitOfWork>();

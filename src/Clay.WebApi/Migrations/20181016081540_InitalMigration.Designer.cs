@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Clay.WebApi.Migrations
 {
     [DbContext(typeof(WebApiDbContext))]
-    [Migration("20181016052559_InitalMigration")]
+    [Migration("20181016081540_InitalMigration")]
     partial class InitalMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -61,7 +61,7 @@ namespace Clay.WebApi.Migrations
 
             modelBuilder.Entity("Clay.WebApi.CardGroup", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -70,7 +70,7 @@ namespace Clay.WebApi.Migrations
                     b.Property<string>("Description")
                         .IsRequired();
 
-                    b.Property<long?>("PropertyId");
+                    b.Property<int?>("PropertyId");
 
                     b.HasKey("Id");
 
@@ -83,15 +83,15 @@ namespace Clay.WebApi.Migrations
 
             modelBuilder.Entity("Clay.WebApi.CardGroupLock", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int?>("AuditId");
 
-                    b.Property<long?>("CardGroupId");
+                    b.Property<int?>("CardGroupId");
 
-                    b.Property<long?>("LockId");
+                    b.Property<int?>("LockId");
 
                     b.HasKey("Id");
 
@@ -135,7 +135,7 @@ namespace Clay.WebApi.Migrations
 
             modelBuilder.Entity("Clay.WebApi.Lock", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -151,7 +151,7 @@ namespace Clay.WebApi.Migrations
 
                     b.Property<int>("LockState");
 
-                    b.Property<long?>("PropertyId");
+                    b.Property<int?>("PropertyId");
 
                     b.HasKey("Id");
 
@@ -166,7 +166,7 @@ namespace Clay.WebApi.Migrations
 
             modelBuilder.Entity("Clay.WebApi.LockCard", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -174,7 +174,7 @@ namespace Clay.WebApi.Migrations
 
                     b.Property<int?>("CardId");
 
-                    b.Property<long?>("LockId");
+                    b.Property<int?>("LockId");
 
                     b.HasKey("Id");
 
@@ -189,7 +189,7 @@ namespace Clay.WebApi.Migrations
 
             modelBuilder.Entity("Clay.WebApi.LockEvent", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -203,7 +203,7 @@ namespace Clay.WebApi.Migrations
 
                     b.Property<int>("EventType");
 
-                    b.Property<long>("LockId");
+                    b.Property<int>("LockId");
 
                     b.HasKey("Id");
 
@@ -220,7 +220,7 @@ namespace Clay.WebApi.Migrations
 
             modelBuilder.Entity("Clay.WebApi.Property", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 

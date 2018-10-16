@@ -12,7 +12,7 @@ namespace Clay.WebApi
 
         /// <summary>Create a property associated to the current an authenticated user</summary>
         /// <returns>Property registererd successfully</returns>
-        Task CreatePropertyAsync(object body, CancellationToken cancellationToken);
+        Task<Property> CreatePropertyAsync(Property body, CancellationToken cancellationToken);
 
         /// <summary>Get a specific property by its ID</summary>
         /// <param name="propertyId">ID of property to return</param>

@@ -20,7 +20,6 @@ namespace Clay.WebApi
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            //modelBuilder.Entity<CardOwner>().HasOne(p => p.CurrentCard).WithOne(c => c.Owner);
         }
     }
 }

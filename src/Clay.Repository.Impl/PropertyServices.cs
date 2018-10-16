@@ -1,4 +1,5 @@
-﻿using Clay.WebApi;
+﻿using Clay.DAL;
+using Clay.WebApi;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,6 +11,14 @@ namespace Clay.Services
 {
     public class PropertyServices : IPropertyServices
     {
+        private readonly IRepository<Property> _properties;
+        private readonly IUnitOfWork _uow;
+
+        public PropertyServices(IRepository<Property> properties, IUnitOfWork uow)
+        {
+            _properties = properties;
+            _uow = uow;
+        }
         public Task AddCardGroupToPropertyAsync(long propertyId, object body, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
@@ -25,9 +34,11 @@ namespace Clay.Services
             throw new NotImplementedException();
         }
 
-        public Task CreatePropertyAsync(object body, CancellationToken cancellationToken)
+        public async Task<Property> CreatePropertyAsync(Property entity, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            await _properties.AddAsync(entity);
+            await _uow.SaveChangesAsync();
+            return entity;
         }
 
         public Task<ObservableCollection<CardGroup>> GetCardsGroupsOfPropertyAsync(long propertyId, CancellationToken cancellationToken)

@@ -8,6 +8,7 @@ namespace Clay.DAL
         where TEntity : class
     {
         void Add(TEntity entity);
+        Task AddAsync(TEntity entity);
         Task AddRangeAsync(params TEntity[] entity);
     }
 }

@@ -1,14 +1,15 @@
 ﻿using System.Threading.Tasks;
 using Clay.DAL;
 using Clay.WebApi;
+using Microsoft.EntityFrameworkCore;
 
-namespace IdentityServer
+namespace Clay.WebApi.Data
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly WebApiDbContext dbContext;
+        private readonly DbContext dbContext;
 
-        public UnitOfWork(WebApiDbContext dbContext)
+        public UnitOfWork(DbContext dbContext)
         {
             this.dbContext = dbContext;
         }

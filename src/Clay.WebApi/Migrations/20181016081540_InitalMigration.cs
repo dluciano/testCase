@@ -74,7 +74,7 @@ namespace Clay.WebApi.Migrations
                 name: "Properties",
                 columns: table => new
                 {
-                    Id = table.Column<long>(nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: false),
                     AuditId = table.Column<int>(nullable: true),
@@ -101,11 +101,11 @@ namespace Clay.WebApi.Migrations
                 name: "CardGroups",
                 columns: table => new
                 {
-                    Id = table.Column<long>(nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Description = table.Column<string>(nullable: false),
                     AuditId = table.Column<int>(nullable: true),
-                    PropertyId = table.Column<long>(nullable: true)
+                    PropertyId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -128,10 +128,10 @@ namespace Clay.WebApi.Migrations
                 name: "Locks",
                 columns: table => new
                 {
-                    Id = table.Column<long>(nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Description = table.Column<string>(nullable: true),
-                    PropertyId = table.Column<long>(nullable: true),
+                    PropertyId = table.Column<int>(nullable: true),
                     AuditId = table.Column<int>(nullable: true),
                     LockState = table.Column<int>(nullable: false),
                     DoorState = table.Column<int>(nullable: false),
@@ -165,11 +165,11 @@ namespace Clay.WebApi.Migrations
                 name: "CardGroupLocks",
                 columns: table => new
                 {
-                    Id = table.Column<long>(nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     AuditId = table.Column<int>(nullable: true),
-                    LockId = table.Column<long>(nullable: true),
-                    CardGroupId = table.Column<long>(nullable: true)
+                    LockId = table.Column<int>(nullable: true),
+                    CardGroupId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -198,10 +198,10 @@ namespace Clay.WebApi.Migrations
                 name: "LockCards",
                 columns: table => new
                 {
-                    Id = table.Column<long>(nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     AuditId = table.Column<int>(nullable: true),
-                    LockId = table.Column<long>(nullable: true),
+                    LockId = table.Column<int>(nullable: true),
                     CardId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -231,9 +231,9 @@ namespace Clay.WebApi.Migrations
                 name: "LockEvents",
                 columns: table => new
                 {
-                    Id = table.Column<long>(nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    LockId = table.Column<long>(nullable: false),
+                    LockId = table.Column<int>(nullable: false),
                     CardId = table.Column<int>(nullable: true),
                     CardOwnerWhenEventTriggerId = table.Column<int>(nullable: true),
                     Details = table.Column<string>(nullable: true),

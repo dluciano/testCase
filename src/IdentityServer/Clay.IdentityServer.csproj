@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Clay.DAL\Clay.DAL.csproj" />
+    <ProjectReference Include="..\Clay.Repository.Impl\Clay.Core.Implementations.csproj" />
   </ItemGroup>
 
   <ItemGroup>

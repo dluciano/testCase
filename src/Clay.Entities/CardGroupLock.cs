@@ -1,4 +1,5 @@
 ﻿using Clay.Entities;
+using System.Collections.Generic;
 
 namespace Clay.WebApi
 {
@@ -12,7 +13,7 @@ namespace Clay.WebApi
         public Audit Audit { get; set; }
 
         [Newtonsoft.Json.JsonProperty("lock", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public virtual Lock Lock { get; set; }
+        public virtual ICollection<Lock> Locks { get; } = new List<Lock>();
 
         [Newtonsoft.Json.JsonProperty("cardGroup", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public virtual CardGroup CardGroup { get; set; }

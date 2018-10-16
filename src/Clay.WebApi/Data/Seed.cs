@@ -121,16 +121,20 @@ namespace Clay.WebApi
                 devCard.Groups.Add(allPeopleGroup);
                 devCard.Locks.Add(mainDoorLock);
 
-                cardGroupLocks.Add(new CardGroupLock()
+                var managerGroupLocks = new CardGroupLock()
                 {
                     CardGroup = managerGroup,
-                    Lock = mainDoorLock
-                });
-                cardGroupLocks.Add(new CardGroupLock()
+                };
+                managerGroupLocks.Locks.Add(mainDoorLock);
+                managerGroupLocks.Locks.Add(managersFloorDoor);
+                cardGroupLocks.Add(managerGroupLocks);
+
+                var allCardGroup = new CardGroupLock()
                 {
                     CardGroup = allPeopleGroup,
-                    Lock = mainDoorLock
-                });
+                };
+                allCardGroup.Locks.Add(mainDoorLock);
+                cardGroupLocks.Add(allCardGroup);
                 await cards.AddRangeAsync(ctoCard, devCard);
             }
             else

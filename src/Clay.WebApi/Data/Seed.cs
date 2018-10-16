@@ -70,7 +70,7 @@ namespace Clay.WebApi
 
             Console.WriteLine("Cards being populated");
             Card ctoCard = new Card() { Identitfier = Guid.NewGuid().ToString() };
-            Card devCard = null;
+            Card devCard = new Card() { Identitfier = Guid.NewGuid().ToString() };
             var mainDoorLock = new Lock()
             {
                 AutoLockAfter = 9997,

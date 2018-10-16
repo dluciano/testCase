@@ -12,6 +12,7 @@ namespace Clay.WebApi.UnitTests
 
         public List<Property> Properties { get; } = new List<Property>();
         public List<Lock> Locks { get; } = new List<Lock>();
+        public List<CardGroup> CardGroups { get; } = new List<CardGroup>();
 
         public void SaveChanges()
         {

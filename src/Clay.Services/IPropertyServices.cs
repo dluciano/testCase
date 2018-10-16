@@ -42,7 +42,7 @@ namespace Clay.WebApi
         /// <summary>Get all the card groups belonging to a property</summary>
         /// <param name="propertyId">ID of property</param>
         /// <returns>Ok</returns>
-        Task<ObservableCollection<CardGroup>> GetCardsGroupsOfPropertyAsync(int propertyId, CancellationToken cancellationToken);
+        Task<ResultDto> GetCardsGroupsOfPropertyAsync(int propertyId, CancellationToken cancellationToken);
 
         /// <summary>Add a card group to a property</summary>
         /// <param name="propertyId">ID of the property</param>

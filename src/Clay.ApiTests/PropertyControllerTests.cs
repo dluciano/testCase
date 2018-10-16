@@ -41,8 +41,12 @@ namespace Clay.WebApi.UnitTests
             var dataset = new List<Property>();
             var mockPropertyRepo = new RepositoryTest<Property>(uof.Properties);
             var mockLockRepo = new RepositoryTest<Lock>(uof.Locks);
+            var cgroups = new RepositoryTest<CardGroup>(uof.CardGroups);
 
-            var propertySrv = new PropertyServices(mockPropertyRepo, mockLockRepo, uof);
+            var propertySrv = new PropertyServices(mockPropertyRepo,
+                mockLockRepo,
+                cgroups,
+                uof);
             var lockService = new LockServices();
             return new PropertyController(propertySrv, lockService);
         }

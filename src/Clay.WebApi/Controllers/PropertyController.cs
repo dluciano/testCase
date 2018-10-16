@@ -72,6 +72,11 @@ namespace Clay.WebApi
             }
 
             var result = await _implementation.AddLockToPropertyAsync(propertyId.Value, request, cancellationToken);
+            return RenderResult(result);
+        }
+
+        private IActionResult RenderResult(ResultDto result)
+        {
             switch (result.ResultType)
             {
                 case ResultType.Sucessful:
@@ -102,8 +107,8 @@ namespace Clay.WebApi
         /// <param name="propertyId">ID of property</param>
         /// <returns>Ok</returns>
         [HttpGet, Route("{propertyId}/cardgroup")]
-        public async Task<ObservableCollection<CardGroup>> GetCardsGroupsOfProperty(int propertyId, CancellationToken cancellationToken) =>
-            await _implementation.GetCardsGroupsOfPropertyAsync(propertyId, cancellationToken);
+        public async Task<IActionResult> GetCardsGroupsOfProperty(int propertyId, CancellationToken cancellationToken) =>
+           RenderResult(await _implementation.GetCardsGroupsOfPropertyAsync(propertyId, cancellationToken));
 
         /// <summary>Add a card group to a property</summary>
         /// <param name="propertyId">ID of the property</param>

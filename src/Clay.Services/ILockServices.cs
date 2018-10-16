@@ -15,7 +15,7 @@ namespace Clay.WebApi
         /// <summary>Get all events for a specific lock</summary>
         /// <param name="lockId">ID of lock</param>
         /// <returns>Ok</returns>
-        Task<ObservableCollection<LockEvent>> GetEventsOfLockIdAsync(long lockId, CancellationToken cancellationToken);
+        Task<ResultDto> GetEventsOfLockIdAsync(int lockId, CancellationToken cancellationToken);
 
         /// <summary>Add an event related to a lock</summary>
         /// <param name="lockId">ID of lock</param>

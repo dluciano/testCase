@@ -29,9 +29,17 @@ namespace Clay.WebApi
         /// <param name="lockId">ID of lock</param>
         /// <returns>Ok</returns>
         [HttpGet, Route("{lockId}/event")]
-        public Task<ObservableCollection<LockEvent>> GetEventsOfLockId(long lockId, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetEventsOfLockId(int? lockId, CancellationToken cancellationToken)
         {
-            return _implementation.GetEventsOfLockIdAsync(lockId, cancellationToken);
+            //Validate the request
+            if (lockId == null)
+            {
+                ModelState.AddModelError("lockId", "The lockId cannot be null");
+                return BadRequest(ModelState);
+            }
+            var result = await _implementation
+                .GetEventsOfLockIdAsync(lockId.Value, cancellationToken);
+            return RenderResult(result);
         }
 
         /// <summary>Add an event related to a lock</summary>

@@ -58,7 +58,7 @@ namespace IdentityServer
 
         private void ConfigureInjerctors(IServiceCollection services)
         {
-            services.AddDbContext<DbContext, ApplicationDbContext>(ConfigDb);
+            services.AddDbContext<ApplicationDbContext>(ConfigDb);
 
             services.AddTransient<ISeed, Seed>();
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));

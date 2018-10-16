@@ -109,9 +109,13 @@ namespace Clay.Services
             throw new NotImplementedException();
         }
 
-        public Task<ObservableCollection<LockEvent>> GetEventsOfLockIdAsync(long lockId, CancellationToken cancellationToken)
+        public async Task<ResultDto> GetEventsOfLockIdAsync(int lockId, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var loc = _locks.FirstOrDefault(l => l.Id == lockId);
+            if (loc == null)
+                return ResultDto.NotFound("Lock not found");
+
+            return ResultDto.Ok(new ObservableCollection<LockEvent>(_lockEvent.Where(l => l.Lock.Id == lockId)));
         }
 
         public Task<ObservableCollection<Lock>> GetLockByIdAsync(long lockId, CancellationToken cancellationToken)

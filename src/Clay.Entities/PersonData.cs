@@ -1,22 +1,17 @@
 ﻿using Clay.Entities;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Clay.WebApi
 {
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.11.0.0 (Newtonsoft.Json v9.0.0.0)")]
-    public partial class CardOwner : IAuditable
+    public class PersonData : IAuditable
     {
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int Id { get; set; }
 
         [Newtonsoft.Json.JsonProperty("audit", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Audit Audit { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("cards", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public virtual ICollection<Card> Cards { get; } = new List<Card>();
-
-        //[Newtonsoft.Json.JsonProperty("current_card", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        //public virtual Card CurrentCard { get; set; }
 
         [Newtonsoft.Json.JsonProperty("username", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Username { get; set; }
@@ -36,8 +31,13 @@ namespace Clay.WebApi
         [Newtonsoft.Json.JsonProperty("phone", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Phone { get; set; }
 
-        /// <summary>User Status</summary>
-        [Newtonsoft.Json.JsonProperty("userStatus", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int UserStatus { get; set; }
+        /// <summary>the cards owned by the user of the card</summary>
+        [Newtonsoft.Json.JsonProperty("card", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public virtual Card Card { get; set; }
+
+        public int CardId { get; set; }
+
+        [NotMapped]
+        public string FullName { get => this.FirstName + " " + this.LastName; }
     }
 }

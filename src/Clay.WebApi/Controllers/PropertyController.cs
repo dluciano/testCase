@@ -10,7 +10,7 @@ namespace Clay.WebApi
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "11.20.1.0 (NJsonSchema v9.11.0.0 (Newtonsoft.Json v9.0.0.0))")]
     [Route("api/[controller]")]
     [ApiController]
-    public partial class PropertyController : ControllerBase
+    public partial class PropertyController : ClayBaseController
     {
         private readonly IPropertyServices _implementation;
         private readonly ILockServices _lockServices;

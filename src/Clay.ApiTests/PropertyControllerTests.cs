@@ -9,6 +9,7 @@ using Shouldly;
 using Newtonsoft.Json.Linq;
 using System.Linq;
 using System;
+using Clay.Core.Implementations;
 
 namespace Clay.WebApi.UnitTests
 {
@@ -39,15 +40,22 @@ namespace Clay.WebApi.UnitTests
         {
             uof = uof ?? new TestUnitOfWork();
             var dataset = new List<Property>();
+            var serviceProvider = new FakeServiceProvider();
             var mockPropertyRepo = new RepositoryTest<Property>(uof.Properties);
             var mockLockRepo = new RepositoryTest<Lock>(uof.Locks);
             var cgroups = new RepositoryTest<CardGroup>(uof.CardGroups);
-
+            var cgroupLog = new RepositoryTest<CardGroupLock>(uof.CardGroupLogs);
+            var cards = new RepositoryTest<Card>(uof.Cards);
+            var lockCards = new RepositoryTest<LockCard>(uof.LockCards);
+            var lockEvent = new RepositoryTest<LockEvent>(uof.LockEvents);
+            serviceProvider.RegisterService<IRepository<Property>>(mockPropertyRepo);
+            var securityService = new SecurityService(serviceProvider);
             var propertySrv = new PropertyServices(mockPropertyRepo,
                 mockLockRepo,
                 cgroups,
                 uof);
-            var lockService = new LockServices();
+            var lockService = new LockServices(cards, mockLockRepo,
+                cgroupLog, lockCards, lockEvent, securityService, uof);
             return new PropertyController(propertySrv, lockService);
         }
 

@@ -46,5 +46,7 @@ namespace Clay.WebApi.UnitTests
 
         IEnumerator IEnumerable.GetEnumerator() =>
             this.GetEnumerator();
+
+        public IQueryable<TEntity> Include<TProperty>(Expression<Func<TEntity, TProperty>> expression) => this;
     }
 }

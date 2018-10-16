@@ -8,6 +8,5 @@
 
         [System.Runtime.Serialization.EnumMember(Value = "unlocked")]
         Unlocked = 1,
-
     }
 }

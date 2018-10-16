@@ -1,24 +1,26 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
+using System.CodeDom.Compiler;
 
 namespace Clay.WebApi
 {
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.11.0.0 (Newtonsoft.Json v9.0.0.0)")]
-    public partial class Audit
+    [GeneratedCode("NJsonSchema", "9.11.0.0 (Newtonsoft.Json v9.0.0.0)")]
+    public class Audit
     {
-        [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonProperty("id", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
         public int Id { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("createdBy", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonProperty("createdBy", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public virtual string CreatedBy { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("lastUpdatedBy", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonProperty("lastUpdatedBy", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
         public virtual string LastUpdatedBy { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("createdAt", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonProperty("createdAt", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
         public DateTime CreatedAt { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("lastUpdatedAt", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonProperty("lastUpdatedAt", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
         public DateTime LastUpdatedAt { get; set; }
     }
 }

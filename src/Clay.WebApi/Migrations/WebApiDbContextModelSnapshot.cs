@@ -98,35 +98,6 @@ namespace Clay.WebApi.Migrations
                     b.ToTable("CardGroupLocks");
                 });
 
-            modelBuilder.Entity("Clay.WebApi.CardOwner", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("AuditId");
-
-                    b.Property<string>("Email");
-
-                    b.Property<string>("FirstName");
-
-                    b.Property<string>("LastName");
-
-                    b.Property<string>("Password");
-
-                    b.Property<string>("Phone");
-
-                    b.Property<int>("UserStatus");
-
-                    b.Property<string>("Username");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AuditId");
-
-                    b.ToTable("CardOwners");
-                });
-
             modelBuilder.Entity("Clay.WebApi.Lock", b =>
                 {
                     b.Property<int>("Id")
@@ -138,8 +109,6 @@ namespace Clay.WebApi.Migrations
                     b.Property<long>("AutoLockAfter");
 
                     b.Property<int?>("CardGroupLockId");
-
-                    b.Property<int?>("CardId");
 
                     b.Property<string>("Description");
 
@@ -156,8 +125,6 @@ namespace Clay.WebApi.Migrations
                     b.HasIndex("AuditId");
 
                     b.HasIndex("CardGroupLockId");
-
-                    b.HasIndex("CardId");
 
                     b.HasIndex("PropertyId");
 
@@ -218,6 +185,38 @@ namespace Clay.WebApi.Migrations
                     b.ToTable("LockEvents");
                 });
 
+            modelBuilder.Entity("Clay.WebApi.PersonData", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("AuditId");
+
+                    b.Property<int>("CardId");
+
+                    b.Property<string>("Email");
+
+                    b.Property<string>("FirstName");
+
+                    b.Property<string>("LastName");
+
+                    b.Property<string>("Password");
+
+                    b.Property<string>("Phone");
+
+                    b.Property<string>("Username");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuditId");
+
+                    b.HasIndex("CardId")
+                        .IsUnique();
+
+                    b.ToTable("PersonData");
+                });
+
             modelBuilder.Entity("Clay.WebApi.Property", b =>
                 {
                     b.Property<int>("Id")
@@ -269,13 +268,6 @@ namespace Clay.WebApi.Migrations
                         .HasForeignKey("CardGroupId");
                 });
 
-            modelBuilder.Entity("Clay.WebApi.CardOwner", b =>
-                {
-                    b.HasOne("Clay.WebApi.Audit", "Audit")
-                        .WithMany()
-                        .HasForeignKey("AuditId");
-                });
-
             modelBuilder.Entity("Clay.WebApi.Lock", b =>
                 {
                     b.HasOne("Clay.WebApi.Audit", "Audit")
@@ -285,10 +277,6 @@ namespace Clay.WebApi.Migrations
                     b.HasOne("Clay.WebApi.CardGroupLock")
                         .WithMany("Locks")
                         .HasForeignKey("CardGroupLockId");
-
-                    b.HasOne("Clay.WebApi.Card")
-                        .WithMany("Locks")
-                        .HasForeignKey("CardId");
 
                     b.HasOne("Clay.WebApi.Property", "Property")
                         .WithMany("Locks")
@@ -302,7 +290,7 @@ namespace Clay.WebApi.Migrations
                         .HasForeignKey("AuditId");
 
                     b.HasOne("Clay.WebApi.Card", "Card")
-                        .WithMany()
+                        .WithMany("Locks")
                         .HasForeignKey("CardId");
 
                     b.HasOne("Clay.WebApi.Lock", "Lock")
@@ -320,13 +308,25 @@ namespace Clay.WebApi.Migrations
                         .WithMany()
                         .HasForeignKey("CardId");
 
-                    b.HasOne("Clay.WebApi.CardOwner", "CardOwnerWhenEventTrigger")
+                    b.HasOne("Clay.WebApi.PersonData", "CardOwnerWhenEventTrigger")
                         .WithMany()
                         .HasForeignKey("CardOwnerWhenEventTriggerId");
 
                     b.HasOne("Clay.WebApi.Lock", "Lock")
                         .WithMany()
                         .HasForeignKey("LockId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Clay.WebApi.PersonData", b =>
+                {
+                    b.HasOne("Clay.WebApi.Audit", "Audit")
+                        .WithMany()
+                        .HasForeignKey("AuditId");
+
+                    b.HasOne("Clay.WebApi.Card", "Card")
+                        .WithOne("PersonData")
+                        .HasForeignKey("Clay.WebApi.PersonData", "CardId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

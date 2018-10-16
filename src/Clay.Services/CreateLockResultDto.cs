@@ -26,6 +26,9 @@ namespace Clay.WebApi
                 StatusMessage = message,
             };
 
+        public static ResultDto Deny() =>
+            new ResultDto(ResultType.Deny);
+
         public static ResultDto Ok(object value, string message = "") =>
             new ResultDto(ResultType.Sucessful, value)
             {

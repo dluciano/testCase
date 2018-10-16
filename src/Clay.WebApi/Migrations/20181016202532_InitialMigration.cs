@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Clay.WebApi.Migrations
 {
-    public partial class InitalMigration : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -25,32 +25,6 @@ namespace Clay.WebApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CardOwners",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    AuditId = table.Column<int>(nullable: true),
-                    Username = table.Column<string>(nullable: true),
-                    FirstName = table.Column<string>(nullable: true),
-                    LastName = table.Column<string>(nullable: true),
-                    Email = table.Column<string>(nullable: true),
-                    Password = table.Column<string>(nullable: true),
-                    Phone = table.Column<string>(nullable: true),
-                    UserStatus = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CardOwners", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_CardOwners_Audit_AuditId",
-                        column: x => x.AuditId,
-                        principalTable: "Audit",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Cards",
                 columns: table => new
                 {
@@ -68,6 +42,38 @@ namespace Clay.WebApi.Migrations
                         principalTable: "Audit",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PersonData",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    AuditId = table.Column<int>(nullable: true),
+                    Username = table.Column<string>(nullable: true),
+                    FirstName = table.Column<string>(nullable: true),
+                    LastName = table.Column<string>(nullable: true),
+                    Email = table.Column<string>(nullable: true),
+                    Password = table.Column<string>(nullable: true),
+                    Phone = table.Column<string>(nullable: true),
+                    CardId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PersonData", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PersonData_Audit_AuditId",
+                        column: x => x.AuditId,
+                        principalTable: "Audit",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_PersonData_Cards_CardId",
+                        column: x => x.CardId,
+                        principalTable: "Cards",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -125,50 +131,12 @@ namespace Clay.WebApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Locks",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Description = table.Column<string>(nullable: true),
-                    PropertyId = table.Column<int>(nullable: true),
-                    AuditId = table.Column<int>(nullable: true),
-                    LockState = table.Column<int>(nullable: false),
-                    DoorState = table.Column<int>(nullable: false),
-                    AutoLockAfter = table.Column<long>(nullable: false),
-                    CardId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Locks", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Locks_Audit_AuditId",
-                        column: x => x.AuditId,
-                        principalTable: "Audit",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Locks_Cards_CardId",
-                        column: x => x.CardId,
-                        principalTable: "Cards",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Locks_Properties_PropertyId",
-                        column: x => x.PropertyId,
-                        principalTable: "Properties",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "CardGroupLocks",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     AuditId = table.Column<int>(nullable: true),
-                    LockId = table.Column<int>(nullable: true),
                     CardGroupId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -186,10 +154,42 @@ namespace Clay.WebApi.Migrations
                         principalTable: "CardGroups",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Locks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Description = table.Column<string>(nullable: true),
+                    Identifier = table.Column<string>(nullable: true),
+                    PropertyId = table.Column<int>(nullable: true),
+                    AuditId = table.Column<int>(nullable: true),
+                    LockState = table.Column<int>(nullable: false),
+                    DoorState = table.Column<int>(nullable: false),
+                    AutoLockAfter = table.Column<long>(nullable: false),
+                    CardGroupLockId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Locks", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CardGroupLocks_Locks_LockId",
-                        column: x => x.LockId,
-                        principalTable: "Locks",
+                        name: "FK_Locks_Audit_AuditId",
+                        column: x => x.AuditId,
+                        principalTable: "Audit",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Locks_CardGroupLocks_CardGroupLockId",
+                        column: x => x.CardGroupLockId,
+                        principalTable: "CardGroupLocks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Locks_Properties_PropertyId",
+                        column: x => x.PropertyId,
+                        principalTable: "Properties",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -256,9 +256,9 @@ namespace Clay.WebApi.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_LockEvents_CardOwners_CardOwnerWhenEventTriggerId",
+                        name: "FK_LockEvents_PersonData_CardOwnerWhenEventTriggerId",
                         column: x => x.CardOwnerWhenEventTriggerId,
-                        principalTable: "CardOwners",
+                        principalTable: "PersonData",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -280,11 +280,6 @@ namespace Clay.WebApi.Migrations
                 column: "CardGroupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CardGroupLocks_LockId",
-                table: "CardGroupLocks",
-                column: "LockId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_CardGroups_AuditId",
                 table: "CardGroups",
                 column: "AuditId");
@@ -293,11 +288,6 @@ namespace Clay.WebApi.Migrations
                 name: "IX_CardGroups_PropertyId",
                 table: "CardGroups",
                 column: "PropertyId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CardOwners_AuditId",
-                table: "CardOwners",
-                column: "AuditId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Cards_AuditId",
@@ -345,14 +335,25 @@ namespace Clay.WebApi.Migrations
                 column: "AuditId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Locks_CardId",
+                name: "IX_Locks_CardGroupLockId",
                 table: "Locks",
-                column: "CardId");
+                column: "CardGroupLockId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Locks_PropertyId",
                 table: "Locks",
                 column: "PropertyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PersonData_AuditId",
+                table: "PersonData",
+                column: "AuditId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PersonData_CardId",
+                table: "PersonData",
+                column: "CardId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Properties_AuditId",
@@ -368,22 +369,22 @@ namespace Clay.WebApi.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "CardGroupLocks");
-
-            migrationBuilder.DropTable(
                 name: "LockCards");
 
             migrationBuilder.DropTable(
                 name: "LockEvents");
 
             migrationBuilder.DropTable(
-                name: "CardGroups");
-
-            migrationBuilder.DropTable(
-                name: "CardOwners");
+                name: "PersonData");
 
             migrationBuilder.DropTable(
                 name: "Locks");
+
+            migrationBuilder.DropTable(
+                name: "CardGroupLocks");
+
+            migrationBuilder.DropTable(
+                name: "CardGroups");
 
             migrationBuilder.DropTable(
                 name: "Properties");

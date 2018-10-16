@@ -5,6 +5,7 @@
         Sucessful,
         InvalidRequest,
         EntityNotFounded,
-        Invalid
+        Invalid,
+        Deny
     }
 }

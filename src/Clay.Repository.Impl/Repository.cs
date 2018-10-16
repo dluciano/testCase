@@ -66,5 +66,11 @@ namespace Clay.DAL
 
         IEnumerator IEnumerable.GetEnumerator() =>
             GetEnumerator();
+
+        public IQueryable<TEntity> Include<TProperty>(Expression<Func<TEntity, TProperty>> expression)
+        {
+            var include = Set.Include(expression);
+            return include.AsQueryable();
+        }
     }
 }

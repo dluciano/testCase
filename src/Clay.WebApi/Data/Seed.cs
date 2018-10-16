@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Clay.DAL;
-using Clay.WebApi;
 using IdentityServer;
 
 namespace Clay.WebApi
@@ -12,7 +11,7 @@ namespace Clay.WebApi
         private readonly IRepository<Card> cards;
         private readonly IRepository<CardGroup> cardGroups;
         private readonly IRepository<CardGroupLock> cardGroupLocks;
-        private readonly IRepository<CardOwner> cardOwners;
+        private readonly IRepository<PersonData> cardOwners;
         private readonly IRepository<Lock> locks;
         private readonly IRepository<LockCard> lockCards;
         private readonly IRepository<LockEvent> lockEvents;
@@ -20,7 +19,7 @@ namespace Clay.WebApi
 
         public Seed(IRepository<Property> properties,
             IRepository<Card> cards,
-            IRepository<CardOwner> cardOwners,
+            IRepository<PersonData> cardOwners,
 
             IRepository<Lock> locks,
             IRepository<CardGroup> cardGroups,
@@ -29,6 +28,7 @@ namespace Clay.WebApi
             IRepository<LockCard> lockCards,
 
             IRepository<LockEvent> lockEvents,
+
             IUnitOfWork uof)
         {
             this.cards = cards;
@@ -58,7 +58,11 @@ namespace Clay.WebApi
             if (!properties.Any())
             {
                 Console.WriteLine("Properties being populated");
-                property = new Property() { Name = "Clay Office" };
+                property = new Property()
+                {
+                    Name = "Clay Office",
+                    OwnerUsername = "test@test.com"
+                };
                 await properties.AddAsync(property);
             }
             else
@@ -69,15 +73,38 @@ namespace Clay.WebApi
 
 
             Console.WriteLine("Cards being populated");
-            Card ctoCard = new Card() { Identitfier = Guid.NewGuid().ToString() };
-            Card devCard = new Card() { Identitfier = Guid.NewGuid().ToString() };
+            var ctoCard = new Card()
+            {
+                Identitfier = Guid.NewGuid().ToString(),
+                PersonData = new PersonData
+                {
+                    Username = "cto",
+                    FirstName = "Cto",
+                    LastName = "Chief Tech",
+                    Email = "c@c.com"
+                }
+            };
+
+            var devCard = new Card()
+            {
+                Identitfier = Guid.NewGuid().ToString(),
+                PersonData = new PersonData()
+                {
+                    Username = "dev",
+                    FirstName = "Developer",
+                    LastName = "CSharp .NET",
+                    Email = "e@e.com"
+                }
+            };
+
             var mainDoorLock = new Lock()
             {
                 AutoLockAfter = 9997,
                 LockState = LockState.Locked,
                 DoorState = LockDoorState.Closed,
                 Property = property,
-                Description = "Main Door"
+                Description = "Main Door",
+                Identifier = Guid.NewGuid().ToString()
             };
             var managersFloorDoor = new Lock()
             {
@@ -85,7 +112,8 @@ namespace Clay.WebApi
                 LockState = LockState.Locked,
                 DoorState = LockDoorState.Closed,
                 Property = property,
-                Description = "Managers Entrance Door"
+                Description = "Managers Entrance Door",
+                Identifier = Guid.NewGuid().ToString()
             };
             var managerGroup = new CardGroup()
             {
@@ -102,24 +130,14 @@ namespace Clay.WebApi
             {
                 ctoCard.Properties.Add(property);
                 devCard.Properties.Add(property);
-
-                ctoCard.Owners.Add(new CardOwner()
-                {
-                    Username = "Cto",
-                    FirstName = "Chief",
-                    LastName = "Tech Offf"
-                });
                 ctoCard.Groups.Add(managerGroup);
 
-                devCard.Owners.Add(new CardOwner()
-                {
-                    Username = "dev",
-                    FirstName = "Developer",
-                    LastName = "CSharp .NET"
-                });
-
                 devCard.Groups.Add(allPeopleGroup);
-                devCard.Locks.Add(mainDoorLock);
+                devCard.Locks.Add(new LockCard
+                {
+                    Lock = mainDoorLock,
+                    Card = devCard
+                });
 
                 var managerGroupLocks = new CardGroupLock()
                 {

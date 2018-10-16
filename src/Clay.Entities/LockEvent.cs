@@ -1,4 +1,5 @@
 ﻿using Clay.Entities;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Clay.WebApi
 {
@@ -16,7 +17,7 @@ namespace Clay.WebApi
         public virtual Card Card { get; set; }
 
         [Newtonsoft.Json.JsonProperty("cardOwnerWhenEventTrigger", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public virtual CardOwner CardOwnerWhenEventTrigger { get; set; }
+        public virtual PersonData CardOwnerWhenEventTrigger { get; set; }
 
         [Newtonsoft.Json.JsonProperty("details", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Details { get; set; }

@@ -43,7 +43,9 @@ namespace Clay.WebApi
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
             services.AddTransient<IUnitOfWork, UnitOfWork>();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc()
+                .AddJsonOptions(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddAuthentication("Bearer")
                 .AddIdentityServerAuthentication(options =>
                 {
@@ -76,51 +78,51 @@ namespace Clay.WebApi
             {
                 app.UseDeveloperExceptionPage();
 
+                app.UseSwaggerUi3WithApiExplorer(config =>
+                    {
+                        config.GeneratorSettings.OperationProcessors.TryGet<ApiVersionProcessor>()
+                            .IncludedVersions = new[] { "1.0" };
+                        config.SwaggerRoute = "/v1/swagger.json";
+
+                        config.GeneratorSettings.Title = "Clay Api";
+                        config.GeneratorSettings.Description = "Documentation of the lock API";
+
+                        config.GeneratorSettings.DefaultPropertyNameHandling =
+                            PropertyNameHandling.CamelCase;
+
+                        config.GeneratorSettings.DocumentProcessors.Add(
+                            new SecurityDefinitionAppender("oauth2", new SwaggerSecurityScheme
+                            {
+                                Type = SwaggerSecuritySchemeType.OAuth2,
+                                Description = "Foo",
+                                Flow = SwaggerOAuth2Flow.Implicit,
+                                AuthorizationUrl = "https://localhost:45268/connect/authorize",
+                                TokenUrl = "https://localhost:45268/connect/token",
+                                Scopes = new Dictionary<string, string>
+                                {
+                                { "openid", "Read access to protected resources" },
+                                { "profile", "Read access to protected resources" },
+                                { "email", "Write access to protected resources" },
+                                { "clayLockApi", "Write access to protected resources" }
+                                }
+                            })
+                        );
+
+                        config.GeneratorSettings.DocumentProcessors.Add(
+                            new SecurityDefinitionAppender("apikey", new SwaggerSecurityScheme
+                            {
+                                Type = SwaggerSecuritySchemeType.ApiKey,
+                                Name = "api_key",
+                                In = SwaggerSecurityApiKeyLocation.Header,
+                            })
+                        );
+                    });
+
             }
             else
             {
                 app.UseHsts();
             }
-
-            app.UseSwaggerUi3WithApiExplorer(config =>
-                {
-                    config.GeneratorSettings.OperationProcessors.TryGet<ApiVersionProcessor>()
-                        .IncludedVersions = new[] { "1.0" };
-                    config.SwaggerRoute = "/v1/swagger.json";
-
-                    config.GeneratorSettings.Title = "Clay Api";
-                    config.GeneratorSettings.Description = "Documentation of the lock API";
-
-                    config.GeneratorSettings.DefaultPropertyNameHandling =
-                        PropertyNameHandling.CamelCase;
-
-                    config.GeneratorSettings.DocumentProcessors.Add(
-                        new SecurityDefinitionAppender("oauth2", new SwaggerSecurityScheme
-                        {
-                            Type = SwaggerSecuritySchemeType.OAuth2,
-                            Description = "Foo",
-                            Flow = SwaggerOAuth2Flow.Implicit,
-                            AuthorizationUrl = "https://localhost:45268/connect/authorize",
-                            TokenUrl = "https://localhost:45268/connect/token",
-                            Scopes = new Dictionary<string, string>
-                            {
-                                { "openid", "Read access to protected resources" },
-                                { "profile", "Read access to protected resources" },
-                                { "email", "Write access to protected resources" },
-                                { "clayLockApi", "Write access to protected resources" }
-                            }
-                        })
-                    );
-
-                    config.GeneratorSettings.DocumentProcessors.Add(
-                        new SecurityDefinitionAppender("apikey", new SwaggerSecurityScheme
-                        {
-                            Type = SwaggerSecuritySchemeType.ApiKey,
-                            Name = "api_key",
-                            In = SwaggerSecurityApiKeyLocation.Header,
-                        })
-                    );
-                });
 
             app.UseHttpsRedirection();
             app.UseCors("default");
@@ -130,6 +132,7 @@ namespace Clay.WebApi
         }
         private void ConfigDb(DbContextOptionsBuilder options)
         {
+
             if (_env.IsDevelopment())
                 options.UseSqlServer(_connectionString);
             else if (_env.EnvironmentName == "Docker")

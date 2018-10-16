@@ -55,11 +55,11 @@ namespace Clay.WebApi
         Task RemoveCardGroupLockPermissionAsync(long lockId, System.Collections.Generic.IEnumerable<long> cardGroupId, CancellationToken cancellationToken);
 
         /// <summary>Execute a command on a lock</summary>
-        /// <param name="id">ID of lock</param>
+        /// <param name="lockId">ID of lock</param>
         /// <param name="commandId">ID of the command</param>
         /// <param name="cardId">ID of the card that wants to execute the command. If this command is run by an user then the cardId will be null and the userId will be in the Audit information</param>
         /// <returns>Lock command executed successfully</returns>
-        Task ExecuteCommandsForLockIdAsync(long id, long commandId, long? cardId, CancellationToken cancellationToken);
+        Task<ResultDto> ExecuteCommandsForLockIdAsync(int lockId, LockState commandId, int? cardId, CancellationToken cancellationToken);
 
     }
 }
